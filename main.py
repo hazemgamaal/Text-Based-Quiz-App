@@ -37,3 +37,34 @@ class QuizController:
 
         # Show first question
         self.show_question()
+        def show_question(self):
+        q = self.questions[self.current_index]
+        self.ui.display_question(q)
+
+    def answer_selected(self, answer):
+        if not self.questions:
+            return
+
+        q = self.questions[self.current_index]
+
+        # Check answer
+        if check_answer(answer, q["answer"]):
+            self.score += 1
+
+        self.current_index += 1
+        self.ui.update_score(self.score, len(self.questions))
+
+        if self.current_index >= len(self.questions):
+            self.ui.question_text.set("Quiz completed! Check your score above.")
+        else:
+            self.show_question()
+
+    def retry_quiz(self):
+        # Reset and start quiz again
+        self.start_quiz()
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    controller = QuizController(root)
+    root.mainloop()
