@@ -38,7 +38,7 @@ class QuizController:
         # Show first question
         self.show_question()
         def show_question(self):
-        q = self.questions[self.current_index]
+            q = self.questions[self.current_index]
         self.ui.display_question(q)
 
     def answer_selected(self, answer):
@@ -68,3 +68,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     controller = QuizController(root)
     root.mainloop()
+
