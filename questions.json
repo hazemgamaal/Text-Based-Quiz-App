@@ -1,0 +1,222 @@
+[
+    {
+        "question": "Which data type is used to store True/False values?",
+        "options": {
+            "A": "String",
+            "B": "Boolean",
+            "C": "Integer",
+            "D": "Float"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which symbol is used for comments in Python?",
+        "options": {
+            "A": "#",
+            "B": "//",
+            "C": "/* */",
+            "D": "<!-- -->"
+        },
+        "answer": "A",
+        "difficulty": "easy"
+    },
+    {
+        "question": "What does CPU stand for?",
+        "options": {
+            "A": "Central Process Unit",
+            "B": "Central Processing Unit",
+            "C": "Computer Personal Unit",
+            "D": "Control Processing Unit"
+        },
+        "answer": "B",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which sorting algorithm has O(n^2) worst-case complexity?",
+        "options": {
+            "A": "Merge Sort",
+            "B": "Bubble Sort",
+            "C": "Quick Sort",
+            "D": "Heap Sort"
+        },
+        "answer": "B",
+        "difficulty": "medium"
+    },
+    {
+        "question": "What is the output of: print(2 ** 3)?",
+        "options": {
+            "A": "6",
+            "B": "8",
+            "C": "9",
+            "D": "23"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which of the following is NOT a Python data type?",
+        "options": {
+            "A": "List",
+            "B": "Tuple",
+            "C": "Character",
+            "D": "Dictionary"
+        },
+        "answer": "C",
+        "difficulty": "easy"
+    },
+    {
+        "question": "What is the main purpose of RAM in a computer?",
+        "options": {
+            "A": "Permanent storage",
+            "B": "Temporary storage for running programs",
+            "C": "Processing graphics",
+            "D": "Cooling the CPU"
+        },
+        "answer": "B",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which keyword is used to create a function in Python?",
+        "options": {
+            "A": "func",
+            "B": "def",
+            "C": "function",
+            "D": "lambda"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which HTML tag is used for a hyperlink?",
+        "options": {
+            "A": "<link>",
+            "B": "<a>",
+            "C": "<href>",
+            "D": "<hyper>"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which algorithm has O(n log n) average complexity?",
+        "options": {
+            "A": "Insertion Sort",
+            "B": "Bubble Sort",
+            "C": "Quick Sort",
+            "D": "Selection Sort"
+        },
+        "answer": "C",
+        "difficulty": "hard"
+    },
+    {
+        "question": "What is the binary representation of the decimal number 10?",
+        "options": {
+            "A": "1010",
+            "B": "1001",
+            "C": "1100",
+            "D": "1110"
+        },
+        "answer": "A",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which HTTP status code means 'Not Found'?",
+        "options": {
+            "A": "200",
+            "B": "301",
+            "C": "404",
+            "D": "500"
+        },
+        "answer": "C",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which database language is used to query data?",
+        "options": {
+            "A": "HTML",
+            "B": "SQL",
+            "C": "Python",
+            "D": "CSS"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "What does CSS stand for?",
+        "options": {
+            "A": "Computer Style Sheets",
+            "B": "Cascading Style Sheets",
+            "C": "Creative Style System",
+            "D": "Coded Style Syntax"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    },
+    {
+        "question": "Which Python keyword is used for exception handling?",
+        "options": {
+            "A": "try",
+            "B": "catch",
+            "C": "except",
+            "D": "handle"
+        },
+        "answer": "C",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which data structure uses FIFO (First In First Out)?",
+        "options": {
+            "A": "Stack",
+            "B": "Queue",
+            "C": "Linked List",
+            "D": "Tree"
+        },
+        "answer": "B",
+        "difficulty": "medium"
+    },
+    {
+        "question": "In networking, what does IP stand for?",
+        "options": {
+            "A": "Internet Protocol",
+            "B": "Internal Process",
+            "C": "Internet Procedure",
+            "D": "Internal Protocol"
+        },
+        "answer": "A",
+        "difficulty": "medium"
+    },
+    {
+        "question": "Which algorithm is used in blockchain for proof of work?",
+        "options": {
+            "A": "SHA-256",
+            "B": "AES",
+            "C": "RSA",
+            "D": "MD5"
+        },
+        "answer": "A",
+        "difficulty": "hard"
+    },
+    {
+        "question": "Which sorting algorithm always has O(n log n) worst-case complexity?",
+        "options": {
+            "A": "Heap Sort",
+            "B": "Quick Sort",
+            "C": "Bubble Sort",
+            "D": "Insertion Sort"
+        },
+        "answer": "A",
+        "difficulty": "hard"
+    },
+    {
+        "question": "What does HTML stand for?",
+        "options": {
+            "A": "Hyperlinks and Text Markup Language",
+            "B": "Hyper Text Markup Language",
+            "C": "Hyperlink Text Mark Language",
+            "D": "Home Tool Markup Language"
+        },
+        "answer": "B",
+        "difficulty": "easy"
+    }
+]
