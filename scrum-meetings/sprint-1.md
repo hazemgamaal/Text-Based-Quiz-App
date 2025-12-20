@@ -13,5 +13,3 @@ Blockers / Issues:
 - None
 
 
-
-Add Sprint 1 scrum meeting summary
