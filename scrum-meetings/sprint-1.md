@@ -11,3 +11,7 @@ What will be done next:
 
 Blockers / Issues:
 - None
+
+
+
+Add Sprint 1 scrum meeting summary
