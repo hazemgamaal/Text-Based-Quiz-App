@@ -15,5 +15,10 @@ jobs:
       - name: Run basic check
         run: echo "Pipeline is running successfully"
 
+       
+      - name: List repository files
+        run: ls
+
+
 
       
