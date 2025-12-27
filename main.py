@@ -1,133 +1,168 @@
-import tkinter as tk
-from tkinter import messagebox
-from ui import QuizUI
+import streamlit as st
+import time
 from core import load_questions, check_answer
 from extra_features import randomize_questions, filter_by_difficulty
 
+# Initialize session state
+if "questions" not in st.session_state:
+    st.session_state.questions = []
+if "current_index" not in st.session_state:
+    st.session_state.current_index = 0
+if "score" not in st.session_state:
+    st.session_state.score = 0
+if "quiz_started" not in st.session_state:
+    st.session_state.quiz_started = False
+if "quiz_finished" not in st.session_state:
+    st.session_state.quiz_finished = False
+if "question_start_time" not in st.session_state:
+    st.session_state.question_start_time = None
+if "time_per_question" not in st.session_state:
+    st.session_state.time_per_question = 15
+if "selected_answer" not in st.session_state:
+    st.session_state.selected_answer = None
+if "show_result" not in st.session_state:
+    st.session_state.show_result = False
+if "correct_answer" not in st.session_state:
+    st.session_state.correct_answer = None
 
-class QuizController:
-    def __init__(self, root) :
-        self.ui = QuizUI(root)
+st.title("Quiz Application")
 
-        # Bind GUI callbacks
-        self.ui.bind_start(self.start_quiz)
-        self.ui.bind_retry(self.retry_quiz)
-        self.ui.bind_answer(self.answer_selected)
+# Difficulty selection
+difficulty = st.selectbox(
+    "Choose Difficulty:", ["easy", "medium", "hard", "all"], index=3
+)
 
-        # Internal state
-        self.questions = []
-        self.current_index = 0
-        self.score = 0
-        self.timer_id = None
-        self.time_per_question = 15
+# Control buttons
+col1, col2 = st.columns(2)
+with col1:
+    start_quiz = st.button("Start Quiz", use_container_width=True)
+with col2:
+    retry_quiz = st.button("Start From Beginning", use_container_width=True)
 
-    def start_quiz(self):
-        all_questions = load_questions()
-        level = self.ui.diff_var.get()
+# Start quiz
+if start_quiz or retry_quiz:
+    all_questions = load_questions()
+    filtered = filter_by_difficulty(all_questions, difficulty)
+    st.session_state.questions = randomize_questions(filtered)
 
-        # Apply extra features
-        filtered = filter_by_difficulty(all_questions, level)
-        self.questions = randomize_questions(filtered)
+    if not st.session_state.questions:
+        st.warning("No questions available for this difficulty level.")
+        st.session_state.quiz_started = False
+    else:
+        st.session_state.quiz_started = True
+        st.session_state.quiz_finished = False
+        st.session_state.current_index = 0
+        st.session_state.score = 0
+        st.session_state.selected_answer = None
+        st.session_state.show_result = False
+        st.session_state.question_start_time = time.time()
+        st.rerun()
 
-        if not self.questions:
-            self.ui.question_text.set("No questions for this difficulty.")
-            return
+# Quiz logic
+if st.session_state.quiz_started and not st.session_state.quiz_finished:
+    if st.session_state.current_index < len(st.session_state.questions):
+        q = st.session_state.questions[st.session_state.current_index]
+        total = len(st.session_state.questions)
 
-        # Reset score & index
-        self.score = 0
-        self.current_index = 0
-        self.ui.update_score(self.score, len(self.questions))
+        # Progress and timer
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write(f"**Question: {st.session_state.current_index + 1}/{total}**")
+        with col2:
+            if (
+                st.session_state.question_start_time
+                and not st.session_state.show_result
+            ):
+                elapsed = time.time() - st.session_state.question_start_time
+                remaining = max(0, int(st.session_state.time_per_question - elapsed))
+                st.write(f"**Time: {remaining}s**")
 
-        # Show first question
-        self.show_question()
-    def show_question(self):
-        q = self.questions[self.current_index]
-        # reset UI state for new question
-        total = len(self.questions)
-        self.ui.set_progress(self.current_index + 1, total)
-        self.ui.reset_option_styles()
-        self.ui.enable_options()
-        self.ui.display_question(q)
-
-        # start timer
-        self.start_timer(self.time_per_question)
-
-    def start_timer(self, seconds):
-        # cancel existing timer if any
-        if self.timer_id:
-            self.ui.root.after_cancel(self.timer_id)
-            self.timer_id = None
-
-        def tick(remaining):
-            self.ui.set_timer(f"Time: {remaining}s")
-            if remaining <= 0:
-                # time up -> treat as no answer
-                self.process_answer(None)
-                return
-            self.timer_id = self.ui.root.after(1000, lambda: tick(remaining - 1))
-
-        tick(seconds)
-
-    def answer_selected(self, answer):
-        # guard
-        if not self.questions:
-            return
-        # disable further input immediately
-        self.ui.disable_options()
-        # handle answer processing
-        self.process_answer(answer)
-
-    def process_answer(self, selected_key):
-        # stop timer
-        if self.timer_id:
-            try:
-                self.ui.root.after_cancel(self.timer_id)
-            except Exception:
-                pass
-            self.timer_id = None
-
-        q = self.questions[self.current_index]
-        correct = q["answer"]
-
-        # score update
-        if selected_key and check_answer(selected_key, correct):
-            self.score += 1
-
-        # highlight choices
-        self.ui.highlight_options(correct_key=correct, selected_key=selected_key)
-
-        # update score display
-        self.ui.update_score(self.score, len(self.questions))
-
-        # move to next question after short delay
-        def next_q():
-            self.current_index += 1
-            if self.current_index >= len(self.questions):
-                # finished
-                self.finish_quiz()
+                # Auto-advance if time runs out
+                if remaining <= 0 and not st.session_state.show_result:
+                    st.session_state.selected_answer = None
+                    st.session_state.show_result = True
+                    st.session_state.correct_answer = q["answer"]
+                    if check_answer(None, q["answer"]):
+                        st.session_state.score += 1
+                    st.rerun()
             else:
-                self.show_question()
+                st.write("**Time: 0s**")
 
-        # schedule next
-        self.ui.root.after(1000, next_q)
+        # Progress bar
+        progress = (st.session_state.current_index + 1) / total
+        st.progress(progress)
 
-    def finish_quiz(self):
-        self.ui.set_timer("")
-        self.ui.set_progress(len(self.questions), len(self.questions))
-        msg = f"You scored {self.score} out of {len(self.questions)}."
-        if messagebox.askyesno("Quiz Completed", msg + "\n\nPlay again?"):
-            self.retry_quiz()
+        # Display question
+        st.markdown(f"### {q['question']}")
+
+        # Answer options
+        if not st.session_state.show_result:
+            options = []
+            option_keys = ["A", "B", "C", "D"]
+            for key in option_keys:
+                if key in q.get("options", {}):
+                    options.append(f"{key}: {q['options'][key]}")
+
+            selected = st.radio(
+                "Select your answer:",
+                options,
+                key=f"question_{st.session_state.current_index}",
+            )
+
+            if st.button("Submit Answer"):
+                selected_key = selected.split(":")[0] if selected else None
+                st.session_state.selected_answer = selected_key
+                st.session_state.correct_answer = q["answer"]
+                st.session_state.show_result = True
+                st.session_state.question_start_time = None
+
+                # Check answer
+                if check_answer(selected_key, q["answer"]):
+                    st.session_state.score += 1
+
+                st.rerun()
         else:
-            self.ui.question_text.set("Quiz completed! Thank you for playing.")
+            # Show result
+            st.session_state.correct_answer = q["answer"]
+            option_keys = ["A", "B", "C", "D"]
 
-    def retry_quiz(self):
-        # Reset and start quiz again
-        self.start_quiz()
+            for key in option_keys:
+                if key in q.get("options", {}):
+                    option_text = f"{key}: {q['options'][key]}"
+                    if key == st.session_state.correct_answer:
+                        st.success(f"✓ {option_text} (Correct)")
+                    elif key == st.session_state.selected_answer:
+                        st.error(f"✗ {option_text} (Your answer)")
+                    else:
+                        st.write(option_text)
 
+            # Score display
+            st.write(f"**Score: {st.session_state.score}/{total}**")
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    controller = QuizController(root)
-    root.mainloop()
+            # Next question button
+            if st.button("Next Question"):
+                st.session_state.current_index += 1
+                st.session_state.selected_answer = None
+                st.session_state.show_result = False
 
+                if st.session_state.current_index >= len(st.session_state.questions):
+                    st.session_state.quiz_finished = True
+                else:
+                    st.session_state.question_start_time = time.time()
+                st.rerun()
 
+    # Quiz finished
+    if st.session_state.quiz_finished:
+        total = len(st.session_state.questions)
+        st.balloons()
+        st.success(
+            f"🎉 Quiz Completed! You scored {st.session_state.score} out of {total}."
+        )
+
+        if st.button("Play Again"):
+            st.session_state.quiz_started = False
+            st.session_state.quiz_finished = False
+            st.rerun()
+else:
+    # Initial state - show welcome message
+    st.info("Select a difficulty level and click 'Start Quiz' to begin!")
