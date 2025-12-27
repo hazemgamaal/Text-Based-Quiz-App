@@ -58,8 +58,21 @@ if start_quiz or retry_quiz:
         st.session_state.question_start_time = time.time()
         st.rerun()
 
+# Quiz finished check (must be before the main quiz logic)
+if st.session_state.quiz_started and st.session_state.quiz_finished:
+    total = len(st.session_state.questions)
+    st.balloons()
+    st.success(
+        f"🎉 Quiz Completed! You scored {st.session_state.score} out of {total}."
+    )
+
+    if st.button("Play Again"):
+        st.session_state.quiz_started = False
+        st.session_state.quiz_finished = False
+        st.rerun()
+
 # Quiz logic
-if st.session_state.quiz_started and not st.session_state.quiz_finished:
+elif st.session_state.quiz_started and not st.session_state.quiz_finished:
     if st.session_state.current_index < len(st.session_state.questions):
         q = st.session_state.questions[st.session_state.current_index]
         total = len(st.session_state.questions)
@@ -150,19 +163,6 @@ if st.session_state.quiz_started and not st.session_state.quiz_finished:
                 else:
                     st.session_state.question_start_time = time.time()
                 st.rerun()
-
-    # Quiz finished
-    if st.session_state.quiz_finished:
-        total = len(st.session_state.questions)
-        st.balloons()
-        st.success(
-            f"🎉 Quiz Completed! You scored {st.session_state.score} out of {total}."
-        )
-
-        if st.button("Play Again"):
-            st.session_state.quiz_started = False
-            st.session_state.quiz_finished = False
-            st.rerun()
 else:
     # Initial state - show welcome message
     st.info("Select a difficulty level and click 'Start Quiz' to begin!")
